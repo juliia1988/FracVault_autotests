@@ -10,12 +10,23 @@ node {
             sh 'pipenv install'
         }
 
-        stage('Test APIs') {
-            sh 'pipenv run pytest test_APIs -sv --alluredir=allure_results'
+        stage('DEV Test APIs') {
+            sh 'pipenv run pytest DEV_test_APIs -sv --alluredir=allure_results'
         }
 
-        stage('Test ETL') {
-            sh 'pipenv run pytest test_ETL -sv --alluredir=allure_results'
+        stage('DEV Test ETL') {
+            sh 'pipenv run pytest DEV_test_ETL -sv --alluredir=allure_results'
+        }
+
+        stage('DEV Test PJR') {
+            sh 'pipenv run pytest DEV_test_PJR -sv --alluredir=allure_results'
+        }
+
+        stage('STAGE Test API') {
+            sh 'pipenv run pytest STAGE_test_API -sv --alluredir=allure_results'
+        }
+        stage('STAGE Test PJR') {
+            sh 'pipenv run pytest STAGE_test_PJR -sv --alluredir=allure_results'
         }
 
         stage("Report"){
