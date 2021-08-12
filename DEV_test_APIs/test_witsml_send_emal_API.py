@@ -1,10 +1,24 @@
 import requests
 import json
 import allure
-headers = {'content-type': 'application/json'}
+from DEV_test_ETL.settings_for_etl import cursor
+
+cursor.execute("select numAPI, TreatmentNumber, Operator from [dbo].WellSummary INNER JOIN TreatmentSummary on TreatmentSummary.WellSummaryId = WellSummary.WellSummaryId order by NEWID()")
+row = cursor.fetchone()
+new_numAPI = row[0]
+new_interval = row[1]
+new_operator = row[2]
+print(new_numAPI,new_interval,new_operator)
+
 url = 'https://witsmlapitrigger.azurewebsites.net/api/GenerateWitsmlAndSendEmail'
-data = {"numAPI": ["05-001-09880-00"], "Intervals": ["9"], "email": "yuliia.sokolova3@halliburton.com", "operator": ["Great Western"], "WITSMLObjects": ["ALL"], "ExcludeElements": [[""]]}
-params = {'code': 'c4QwXXPhK/AzgTjpyal8DUZ/P9qtIEbLzXQtTKOXrNmxl/POmiuwkA=='}
+email = "yuliia.sokolova3@halliburton.com"
+code = 'c4QwXXPhK/AzgTjpyal8DUZ/P9qtIEbLzXQtTKOXrNmxl/POmiuwkA=='
+headers = {'content-type': 'application/json'}
+data = {"numAPI": [new_numAPI], "Intervals": [str(new_interval)], "email": email, "operator": [new_operator], "WITSMLObjects": ["ALL"], "ExcludeElements": [[""]]}
+params = {'code': code}
+
+#data = {"numAPI": ["05-001-09880-00"], "Intervals": ["9"], "email": "yuliia.sokolova3@halliburton.com", "operator": ["Great Western"], "WITSMLObjects": ["ALL"], "ExcludeElements": [[""]]}
+#params = {'code': 'c4QwXXPhK/AzgTjpyal8DUZ/P9qtIEbLzXQtTKOXrNmxl/POmiuwkA=='}
 
 
 @allure.feature('Send request to the WITSML send Email API')
@@ -40,7 +54,7 @@ test_witsml_send_email_with_ExcludeElements_parameters()
 @allure.step
 def test_witsml_send_email_with_emptyWITSMLObjects_parameter(headers=headers,url=url):
 
-    data = {"numAPI": ["05-001-09880-00"], "Intervals": ["9"], "email": "yuliia.sokolova3@halliburton.com", "operator": ["Great Western"], "ExcludeElements": [[""]]}
+    data = {"numAPI": [new_numAPI], "Intervals": [str(new_interval)], "email": email, "operator": [new_operator], "WITSMLObjects": ["ALL"], "ExcludeElements": [[""]]}
     params = {'code': 'c4QwXXPhK/AzgTjpyal8DUZ/P9qtIEbLzXQtTKOXrNmxl/POmiuwkA=='}
 
     response = requests.post(url, params=params, data=json.dumps(data), headers=headers)
@@ -56,7 +70,7 @@ test_witsml_send_email_with_emptyWITSMLObjects_parameter()
 @allure.step
 def test_witsml_send_email_without_numAPI_parameter(headers=headers,url=url):
 
-    data = {"Intervals": ["9"], "email": "yuliia.sokolova3@halliburton.com", "operator": ["Great Western"], "ExcludeElements": [[""]]}
+    data = {"Intervals": [str(new_interval)], "email": email, "operator": [new_operator], "WITSMLObjects": ["ALL"], "ExcludeElements": [[""]]}
     params = {'code': 'c4QwXXPhK/AzgTjpyal8DUZ/P9qtIEbLzXQtTKOXrNmxl/POmiuwkA=='}
 
     response = requests.post(url, params=params, data=json.dumps(data), headers=headers)
