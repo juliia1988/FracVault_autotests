@@ -15,7 +15,7 @@ print(TreatmentNumber)
 
 #String that you want to search
 search_for = WorkingInterest
-with open("CustomerDataAPI_code/CustomerKeys.csv") as f_obj:
+with open("STAGE_test_API/CustomerDataAPI_code/CustomerKeys.csv") as f_obj:
     reader = csv.reader(f_obj, delimiter=',')
     for row in reader:      #Iterates through the rows of your csv
         #print(row[0])          #line here refers to a row in the csv
@@ -41,7 +41,7 @@ def test_CustomerDataAPI_with_valid_parameters(headers=headers,url=url,params=pa
     assert response.status_code == 200
 
     url_content = response.content
-    csv_file = open('downloadedCSV/downloaded.csv', 'wb')
+    csv_file = open('STAGE_test_API/downloadedCSV/downloaded.csv', 'wb')
 
     csv_file.write(url_content)
     csv_file.close()
